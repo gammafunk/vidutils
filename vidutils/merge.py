@@ -94,7 +94,7 @@ def crossfade_split(filename, video_duration, crossfade_duration, at_end,
 
     main_fh = make_temp_file(filename, 'main', delete=delete_temp)
     ffmpeg_args.append(main_fh.name)
-    run_ffmpeg(ffmpeg_args)
+    common.run_command(ffmpeg_args)
 
     # Create the second video containing a portion to be crossfaded.
     ffmpeg_args = ['ffmpeg', '-i', filename, '-map', '0', '-c', 'copy']
@@ -117,7 +117,7 @@ def crossfade_split(filename, video_duration, crossfade_duration, at_end,
 
     crossfade_fh = make_temp_file(filename, 'crossf', delete=delete_temp)
     ffmpeg_args.append(crossfade_fh.name)
-    run_ffmpeg(ffmpeg_args)
+    common.run_command(ffmpeg_args)
 
     return (main_fh, crossfade_fh)
 
@@ -157,7 +157,7 @@ def crossfade_videos(first_file, second_file, duration_time, resolution, fps,
     out_file = make_temp_file(desc='final-crossf', delete=delete_temp)
     ffmpeg_args.append(out_file.name)
 
-    run_ffmpeg(ffmpeg_args)
+    common.run_command(ffmpeg_args)
     return out_file
 
 def concat_videos(files, output_filename, delete_temp=True):
@@ -173,7 +173,7 @@ def concat_videos(files, output_filename, delete_temp=True):
     ffmpeg_args = ['ffmpeg', '-f', 'concat', '-safe', '0', '-i', input_fh.name,
             '-map', '0', '-c', 'copy', output_filename]
     try:
-        run_ffmpeg(ffmpeg_args)
+        common.run_command(ffmpeg_args)
     finally:
         if delete_temp:
             os.remove(input_fh.name)
@@ -196,8 +196,8 @@ def main():
                         default=True, help='Keep all temporary files made')
     args = parser.parse_args()
 
-    first_fields = probe_video(args.files[0])
-    second_fields = probe_video(args.files[1])
+    first_fields = common.probe_video(args.files[0])
+    second_fields = common.probe_video(args.files[1])
     check_fields = ['resolution', 'fps']
     for f in check_fields:
         if first_fields[f] != second_fields[f]:
