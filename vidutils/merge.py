@@ -93,7 +93,7 @@ def crossfade_split(filename, video_duration, crossfade_duration, at_end,
         ffmpeg_args += ['-to', delta_to_str(end_delta)]
 
     main_fh = make_temp_file(filename, 'main', delete=delete_temp)
-    ffmpeg_args.append(main_fh.name)
+    ffmpeg_args += ['-y', main_fh.name]
     common.run_command(ffmpeg_args)
 
     # Create the second video containing a portion to be crossfaded.
@@ -116,7 +116,7 @@ def crossfade_split(filename, video_duration, crossfade_duration, at_end,
         ffmpeg_args += ['-to', delta_to_str(end_delta)]
 
     crossfade_fh = make_temp_file(filename, 'crossf', delete=delete_temp)
-    ffmpeg_args.append(crossfade_fh.name)
+    ffmpeg_args += ['-y', crossfade_fh.name]
     common.run_command(ffmpeg_args)
 
     return (main_fh, crossfade_fh)
@@ -155,7 +155,7 @@ def crossfade_videos(first_file, second_file, duration_time, resolution, fps,
     ffmpeg_args += ['-r', str(fps), '-b:v', str(bitrate) + 'k', '-strict',
             '-2', '-ac', '-2']
     out_file = make_temp_file(desc='final-crossf', delete=delete_temp)
-    ffmpeg_args.append(out_file.name)
+    ffmpeg_args += ['-y', out_file.name]
 
     common.run_command(ffmpeg_args)
     return out_file
