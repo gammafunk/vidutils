@@ -31,7 +31,7 @@ def probe_video(filename):
 
     values = {'duration' : match.group(1)}
 
-    vid_pat = 'Stream #0:0.*Video.*, ([0-9]+x[0-9]+), ([0-9]+) kb/s, ([0-9]+) fps'
+    vid_pat = 'Stream #0:0.*Video.*, ([0-9]+x[0-9]+), ([^ ]+) kb/s, ([^ ]+) fps'
     match = re.search(vid_pat, ffprobe_out)
     if not match:
         _log.error("Can't find video details in %s\n%s", filename, ffprobe_out)
@@ -45,7 +45,7 @@ def probe_video(filename):
         values[f] = value
 
     values['bitrate'] = int(round(int(values['bitrate']), -2))
-    values['fps'] = int(values['fps'])
+    values['fps'] = float(values['fps'])
     fields = ['duration'] + fields
 
     num_channels = 0
