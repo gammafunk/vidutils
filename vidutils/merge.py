@@ -144,7 +144,7 @@ def crossfade_videos(first_file, second_file, duration_time, resolution, fps,
     # Crossfade each audio stream between the two files.
     audio_filters = []
     for i in range(0, num_channels):
-        audio_filters.append('[0:a:{0}][1:a:{0}]acrossfade=d={1}[fa0]'.format(
+        audio_filters.append('[0:a:{0}][1:a:{0}]acrossfade=d={1}[fa{0}]'.format(
             i, duration_sec))
     filter += ';'.join(audio_filters)
 
